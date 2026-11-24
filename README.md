@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: geode-sdk/build-geode-mod-docker@main
+      - uses: geode-sdk/build-geode-mod-docker@v1
         with:
           target: ${{ matrix.config.target }}
           upload: true
@@ -49,7 +49,7 @@ jobs:
     needs: ['build']
 
     steps:
-      - uses: geode-sdk/build-geode-mod-docker/merge@main
+      - uses: geode-sdk/build-geode-mod-docker/merge@v1
         with:
           upload: true
 ```
