@@ -4,22 +4,18 @@ description: Merge built mods into a single .geode file
 inputs:
   cli:
     description: Which CLI version to use, defaults to latest release.
-    required: false
     default: latest
 
   delete-artifacts:
     description: Whether to delete temporary artifacts left by the build action.
-    required: false
     default: true
 
   zstd:
     description: Whether to use zstd compression when merging the output .geode files.
-    required: false
     default: true
 
   optimize-pngs:
     description: Whether to recompress PNGs during merging to reduce file size.
-    required: false
     default: true
 
   upload:
