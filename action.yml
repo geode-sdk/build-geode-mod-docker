@@ -184,11 +184,12 @@ runs:
       shell: bash
       run: |
         mkdir -p ~/cache/cpm ~/cache/scc
-        cd "${{ inputs.path }}"
         EXTERNAL_MODS=""
         if [[ "${{ inputs.external-mods }}" != "" ]]; then
-          EXTERNAL_MODS='-v "${{ inputs.external-mods }}:/mods"'
+          EXTERNAL_MODS="-v $(realpath ${{ inputs.external-mods }}):/mods"
         fi
+
+        cd "${{ inputs.path }}"
         docker run -d \
           --name builder \
           -e "SCCACHE_CACHE_SIZE=${{ inputs.sccache-cache-size }}" \
