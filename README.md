@@ -162,4 +162,8 @@ upload:
 upload-zip:
   description: Forces the uploaded artifact to be a zip even if theres only one .geode file.
   default: false
+
+external-mods:
+  description: Path to directory with dependencies (.geode files) of this mod that are not on the index.
+  default: ""
 ```

@@ -78,6 +78,10 @@ inputs:
     description: How many parallel jobs to use. 0 will disable, empty string will use cmake's "--parallel".
     default: ""
 
+  external-mods:
+    description: Path to directory with dependencies (.geode files) of this mod that are not on the index.
+    default: ""
+
 runs:
   using: composite
   steps:
@@ -181,6 +185,10 @@ runs:
       run: |
         mkdir -p ~/cache/cpm ~/cache/scc
         cd "${{ inputs.path }}"
+        EXTERNAL_MODS=""
+        if [[ "${{ inputs.external-mods }}" != "" ]]; then
+          EXTERNAL_MODS='-v "${{ inputs.external-mods }}:/mods"'
+        fi
         docker run -d \
           --name builder \
           -e "SCCACHE_CACHE_SIZE=${{ inputs.sccache-cache-size }}" \
@@ -188,6 +196,7 @@ runs:
           -v ~/cache/cpm:/cpm-cache \
           -v ~/cache/scc:/opt/sccache/cache \
           -v "$GITHUB_WORKSPACE/bindings-repo-clone:/bindings" \
+          $EXTERNAL_MODS \
           "ghcr.io/geode-sdk/${{ steps.platform.outputs.image }}" \
           sleep infinity
 
