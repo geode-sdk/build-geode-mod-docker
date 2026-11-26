@@ -8,27 +8,22 @@ inputs:
 
   sdk:
     description: Which version of the SDK to use. Set to 'given' to use the version specified in mod.json, 'nightly' for latest commit, 'latest' for latest release.
-    required: false
     default: given
 
   configure-args:
     description: Extra arguments passed to CMake when configuring.
-    required: false
     default: ""
 
   build-args:
     description: Extra arguments passed to CMake when building.
-    required: false
     default: ""
 
   build-config:
     description: Which build configuration to use, can only be Release or RelWithDebInfo. Defaults to Release.
-    required: false
     default: Release
 
   path:
     description: Path to the project which to build. Defaults to current directory.
-    required: false
     default: ./
 
   upload:
@@ -37,12 +32,10 @@ inputs:
 
   bindings:
     description: What repository to use for bindings. Must be in the format "user/repo".
-    required: false
     default: "geode-sdk/bindings"
 
   bindings-ref:
     description: Which commit/branch to use for bindings. Defaults to latest commit in main branch.
-    required: false
     default: ""
 
   use-action-cache:
@@ -55,37 +48,34 @@ inputs:
 
   use-lto:
     description: Whether to use LTO (Link Time Optimization) via the CMAKE_INTERPROCEDURAL_OPTIMIZATION flag, improving build size. Defaults to true.
-    required: false
     default: true
 
   use-sccache:
-    description: Whether to use sccache for builds. Defaults to true
-    required: false
+    description: Whether to use sccache for builds. Defaults to true.
     default: true
+
+  sccache-cache-size:
+    description: Max size for sccache cache. Defaults to 1G.
+    default: 1G
 
   export-debug:
     description: Whether to export debug files for builds (.pdb for Windows, .dbg for Android, .dSYM for MacOS). Defaults to false.
-    required: false
     default: false
 
   export-symbols:
     description: Whether to export Breakpad symbols for Android builds. Defaults to false.
-    required: false
     default: false
 
   export-pdb:
     description: Whether to export PDB files for Windows builds. Defaults to false.
-    required: false
     default: false
 
   bundle-pdb:
     description: Whether to bundle PDB files into the .geode package. Requires SDK v4.2.0 and CLI v3.3.0 at minimum. Defaults to false.
-    required: false
     default: false
 
   parallel:
     description: How many parallel jobs to use. 0 will disable, empty string will use cmake's "--parallel".
-    required: false
     default: ""
 
 runs:
@@ -193,7 +183,7 @@ runs:
         cd "${{ inputs.path }}"
         docker run -d \
           --name builder \
-          -e SCCACHE_CACHE_SIZE=1G \
+          -e "SCCACHE_CACHE_SIZE=${{ inputs.sccache-cache-size }}" \
           -v ./:/src -w /src \
           -v ~/cache/cpm:/cpm-cache \
           -v ~/cache/scc:/opt/sccache/cache \
