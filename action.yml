@@ -108,11 +108,6 @@ runs:
           exit 1
         fi
 
-        LTO=""
-        if [ "${{ inputs.use-lto }}" = "true" ]; then
-          LTO="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
-        fi
-
         PRESET="$TARGET"
         if [ "${{ inputs.build-config }}" = "RelWithDebInfo" ]; then
           PRESET="$PRESET-debug"
@@ -144,7 +139,6 @@ runs:
 
         echo "platform=$PLATFORM" >> $GITHUB_OUTPUT
         echo "binaries=$BINARIES" >> $GITHUB_OUTPUT
-        echo "lto=$LTO" >> $GITHUB_OUTPUT
         echo "name=$TARGET" >> $GITHUB_OUTPUT
         echo "build_folder=$BUILD" >> $GITHUB_OUTPUT
         echo "preset=$PRESET" >> $GITHUB_OUTPUT
@@ -217,9 +211,12 @@ runs:
       run: |
         set -x
 
-        LTO="${{ steps.platform.outputs.lto }}"
+        LTO=""
+        if [[ "${{ inputs.use-lto }}" = "true" && "${{ inputs.target }}" != "mac" ]]; then
+          LTO="-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
+        fi
         BUNDLE_PDB=""
-        if [ "${{ inputs.bundle-pdb }}" = "true" ] && [ "${{ inputs.target }}" = "win" ]; then
+        if [[ "${{ inputs.bundle-pdb }}" = "true" && "${{ inputs.target }}" = "win" ]]; then
           BUNDLE_PDB="-DGEODE_BUNDLE_PDB=ON"
         fi
         SCCACHE_ARGS=""
